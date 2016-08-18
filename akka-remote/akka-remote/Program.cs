@@ -30,11 +30,8 @@ akka {
 
             using (ActorSystem system = ActorSystem.Create("MyServer", config))
             {
-                var consoleWriter = system.ActorOf<ConsoleWriterActor>("consoleWriter");
                 var chatHistory = system.ActorOf<ChatHistoryActor>("chatHistory");
-
-                system.ActorOf(Props.Create(() => 
-                    new ChatWriterActor(consoleWriter, chatHistory)), "chatWriter");
+                system.ActorOf(Props.Create(() =>  new ChatWriterActor(chatHistory)), "chatWriter");
                 
                 Console.ReadKey();
             }

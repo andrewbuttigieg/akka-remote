@@ -21,7 +21,7 @@ akka {
     }
     remote {
         helios.tcp {
-            port = 8090
+            port = 0
             hostname = localhost
         }
     }
@@ -30,15 +30,12 @@ akka {
 
             using (var system = ActorSystem.Create("MyClient", config))
             {
-                var consoleWriterLocal = system.ActorOf<ConsoleWriterActor>("consoleWriterLocal");
+                var consoleWriterLocal = system.ActorOf<ConsoleWriterActor>("consoleWriterLocal" + DateTime.Now.Ticks);
 
                 //get a reference to the remote actor
                 var chatWriter = system
                     .ActorSelection("akka.tcp://MyServer@localhost:8080/user/chatWriter");
-
-                var consoleWriter = system
-                    .ActorSelection("akka.tcp://MyServer@localhost:8080/user/consoleWriter");
-
+                
                 var chatHistory = system
                     .ActorSelection("akka.tcp://MyServer@localhost:8080/user/chatHistory");
 
@@ -51,7 +48,14 @@ akka {
                 }
 
                 //send a message to the remote actor
-                chatWriter.Tell(new ConsoleWriterMessage("Hello chat!", ConsoleColor.Cyan));
+                chatWriter.Tell(new ChatSubMessage(consoleWriterLocal));
+                string input;
+                do
+                {
+                    input = Console.ReadLine();
+                    chatWriter.Tell(new ConsoleWriterMessage(input, ConsoleColor.Cyan));
+                } while (!input.Equals("exit", StringComparison.CurrentCultureIgnoreCase));
+
 
                 Console.ReadLine();
             }

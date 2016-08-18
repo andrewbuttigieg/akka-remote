@@ -10,17 +10,23 @@ namespace akka_remote_actors
 {
     public class ChatWriterActor : ReceiveActor
     {
-        IActorRef consoleWriter;
         IActorRef chatHistory;
-        public ChatWriterActor(IActorRef consoleWriter, IActorRef chatHistory)
+        List<IActorRef> subs = new List<IActorRef>();
+
+        public ChatWriterActor(IActorRef chatHistory)
         {
-            this.consoleWriter = consoleWriter;
             this.chatHistory = chatHistory;
 
             Receive<ConsoleWriterMessage>(message =>
             {
-                consoleWriter.Tell(message);
                 chatHistory.Tell(message);
+                foreach (var sub in subs)
+                    sub.Tell(message);
+            });
+
+            Receive<ChatSubMessage>(message =>
+            {
+                subs.Add(message.ConsoleWriter);
             });
         }
     }
