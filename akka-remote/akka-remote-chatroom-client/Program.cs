@@ -30,14 +30,14 @@ akka {
 
             using (var system = ActorSystem.Create("MyClient", config))
             {
-                var consoleWriterLocal = system.ActorOf<ConsoleWriterActor>("consoleWriterLocal" + DateTime.Now.Ticks);
+                var consoleWriterLocal = system.ActorOf<ConsoleWriterActor>("consoleWriterLocal");
 
                 //get a reference to the remote actor
                 var chatWriter = system
-                    .ActorSelection("akka.tcp://MyServer@localhost:8080/user/chatWriter");
+                    .ActorSelection("akka.tcp://MyServer@localhost:8089/user/chatWriter");
                 
                 var chatHistory = system
-                    .ActorSelection("akka.tcp://MyServer@localhost:8080/user/chatHistory");
+                    .ActorSelection("akka.tcp://MyServer@localhost:8089/user/chatHistory");
 
                 var task = chatHistory.Ask<List<ConsoleWriterMessage>>(new GetHistoryMessage());
                 task.Wait();
