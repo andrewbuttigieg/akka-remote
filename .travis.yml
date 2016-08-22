@@ -1,0 +1,6 @@
+language: csharp
+script:
+  - xbuild /p:Configuration=Debug akka-remote/akka-remote.sln
+
+before_script:
+- nuget restore akka-remote/ akka-remote.sln 
