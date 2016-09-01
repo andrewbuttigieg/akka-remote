@@ -33,7 +33,7 @@ akka {
                 var chatHistory = system.ActorOf<ChatHistoryActor>("chatHistory");
                 system.ActorOf(Props.Create(() =>  new ChatWriterActor(chatHistory)), "chatWriter");
                 
-                Console.Readline();
+                Console.ReadLine();
             }
         }
     }
