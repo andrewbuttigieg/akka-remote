@@ -5,4 +5,4 @@ Akka.Net POC for Remote.
 
 cd akka-remote<br/>
 docker build -t jixer/webapidemo .<br/>
-docker run -it --name akka-remote -p 8080:8080 -d jixer/webapidemo<br/>
+docker run -it --name akka-remote -d jixer/webapidemo<br/>
